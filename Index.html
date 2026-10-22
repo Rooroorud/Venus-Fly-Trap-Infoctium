@@ -1,0 +1,2464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venus Flytrap Infoctium</title>
+    <style>
+        /* CSS LAYOUT */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            align-items: center;
+            background-color: #1a1a1a;
+            padding: 15px;
+            gap: 15px;
+            border-bottom: 2px solid #2e7d32;
+        }
+
+        .navbar button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            transition: color 0.3s;
+        }
+
+        .navbar button:hover {
+            color: #4caf50;
+        }
+
+        .navbar-spacer {
+            flex: 1;
+        }
+
+        .account-email {
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+
+        .navbar .account-action {
+            padding: 5px 9px;
+            border: 1px solid #466d48;
+            border-radius: 5px;
+            font-size: 0.85rem;
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        #leaderboard-screen,
+        #strongest-screen,
+        #biggest-screen,
+        #capture-rate-screen {
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 24px;
+            left: 20px;
+            border: none;
+            background: none;
+            color: white;
+            font-size: 2rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            color: #4caf50;
+        }
+
+        /* Home Screen */
+        .hero {
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .hero .cta-btn {
+            display: block;
+            margin: 0 auto 12px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #aaaaaa;
+        }
+
+        .home-note {
+            max-width: 700px;
+            margin: 40px auto 0;
+            color: #888888;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .cta-btn {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .cta-btn:hover {
+            background-color: #388e3c;
+        }
+
+        /* Leaderboard Controls */
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4caf50;
+        }
+
+        .gui-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .tab-btn {
+            background-color: #222;
+            color: white;
+            border: 2px solid #444;
+            padding: 10px 30px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background-color: #2e7d32;
+            border-color: #4caf50;
+        }
+
+        /* Lists Visibility toggle */
+        .list-container {
+            display: none;
+        }
+
+        .list-container.active {
+            display: block;
+        }
+
+        .list-container h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #81c784;
+        }
+
+        .flytrap-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Rank #1 B52 Custom Card Layout */
+        .flytrap-card {
+            display: flex;
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            overflow: hidden;
+            max-width: 750px;
+            width: 100%;
+            margin: 0 auto;
+            border: 1px solid #333;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Image Frame on Left Side */
+        .card-image {
+            width: 40%;
+            min-height: 220px;
+            background-color: #161616;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Title at Middle Top & Text Layout */
+        .card-content {
+            width: 60%;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center; 
+            text-align: center; 
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .card-description {
+            font-size: 1rem;
+            color: #cccccc;
+            line-height: 1.5;
+        }
+
+        .placeholder-text {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+        }
+
+        .capture-rate-subtitle {
+            color: #81c784;
+            font-size: 1rem;
+            font-weight: normal;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .game-panel {
+            max-width: 680px;
+            margin: 50px auto 0;
+            padding: 32px;
+            border: 1px solid #333;
+            border-radius: 14px;
+            background: #1b1b1b;
+            text-align: center;
+        }
+
+        .game-panel h2 {
+            margin-bottom: 12px;
+        }
+
+        .game-panel p {
+            color: #bbb;
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        .account-form {
+            display: grid;
+            gap: 14px;
+            max-width: 360px;
+            margin: 0 auto 18px;
+            text-align: left;
+        }
+
+        .account-form label {
+            display: grid;
+            gap: 6px;
+            color: #ccc;
+        }
+
+        .account-form input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #466d48;
+            border-radius: 6px;
+            background: #111;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .account-actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .account-message {
+            min-height: 1.5em;
+            color: #ffb4a9 !important;
+        }
+
+        .game-actions,
+        .save-slots {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .save-slot {
+            min-width: 160px;
+            min-height: 90px;
+            padding: 16px;
+            border: 1px solid #466d48;
+            border-radius: 10px;
+            background: #202820;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .save-slot-item {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+        }
+
+        .save-slot-delete,
+        .save-slot-confirm button {
+            padding: 8px 12px;
+            border: 1px solid #8a4545;
+            border-radius: 6px;
+            background: #382020;
+            color: #ffdada;
+            cursor: pointer;
+        }
+
+        .save-slot-delete:hover,
+        .save-slot-confirm button:hover {
+            background: #542929;
+        }
+
+        .save-slot-confirm {
+            display: grid;
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid #8a4545;
+            border-radius: 8px;
+            background: #241818;
+            color: #eee;
+            font-size: 0.9rem;
+        }
+
+        .save-slot-confirm-actions {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .save-slot-confirm .cancel-delete {
+            border-color: #466d48;
+            background: #202820;
+            color: white;
+        }
+
+        .save-slot:hover:not(:disabled) {
+            border-color: #81c784;
+            background: #293a2a;
+        }
+
+        .save-slot:disabled {
+            color: #777;
+            cursor: not-allowed;
+        }
+
+        .save-slot small {
+            display: block;
+            margin-top: 8px;
+            color: #aaa;
+        }
+
+        .game-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .game-actions .cta-btn {
+            width: min(100%, 260px);
+        }
+
+        .energy-balance {
+            width: fit-content;
+            margin: 0 auto 20px !important;
+            padding: 8px 14px;
+            border: 1px solid #b9a64a;
+            border-radius: 20px;
+            color: #f2d96b !important;
+            background: #292610;
+            font-weight: 600;
+        }
+
+        .game-status {
+            min-height: 1.5em;
+            margin-top: 16px !important;
+            color: #ffb4a9 !important;
+        }
+
+        .inventory-panel,
+        .garden-panel {
+            max-width: 1000px;
+        }
+
+        .inventory-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+            gap: 24px;
+            text-align: left;
+        }
+
+        .inventory-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 0 auto 22px;
+        }
+
+        .inventory-tab-panel {
+            display: none;
+        }
+
+        .inventory-tab-panel.active {
+            display: block;
+        }
+
+        .inventory-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            align-content: start;
+            gap: 14px;
+        }
+
+        .plant-card {
+            padding: 10px;
+            border: 1px solid #3b553b;
+            border-radius: 10px;
+            background: #202820;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .plant-card:hover,
+        .plant-card.selected {
+            border-color: #81c784;
+            background: #293a2a;
+        }
+
+        .plant-card img {
+            display: block;
+            width: 100%;
+            height: 95px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .seed-inventory-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 14px;
+            text-align: left;
+        }
+
+        .seed-inventory-card {
+            padding: 16px;
+            border: 1px solid #3b553b;
+            border-radius: 10px;
+            background: #202820;
+        }
+
+        .seed-inventory-card h3 {
+            margin-bottom: 8px;
+            color: #81c784;
+        }
+
+        .seed-inventory-card p {
+            margin: 0;
+            color: #ddd;
+        }
+
+        .plant-details {
+            min-height: 290px;
+            padding: 14px;
+            border: 1px solid #3b553b;
+            border-radius: 10px;
+            background: #171d17;
+        }
+
+        .plant-detail-image-frame {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 175px;
+            margin-bottom: 14px;
+            padding: 10px;
+            border: 1px solid #668266;
+            border-radius: 8px;
+            background: #111;
+        }
+
+        .plant-detail-image-frame img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .plant-details h3 {
+            margin-bottom: 8px;
+            color: #81c784;
+            text-align: center;
+        }
+
+        .plant-details p {
+            margin: 0;
+            color: #bbb;
+            line-height: 1.5;
+        }
+
+        .plant-equip-btn {
+            display: block;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .plant-equip-btn:disabled {
+            background: #3b553b;
+            cursor: default;
+        }
+
+        .garden-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(230px, 280px);
+            gap: 20px;
+            text-align: left;
+        }
+
+        .garden-pots {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            align-content: start;
+            gap: 16px;
+        }
+
+        .garden-details {
+            min-height: 300px;
+            padding: 14px;
+            border: 1px solid #3b553b;
+            border-radius: 10px;
+            background: #171d17;
+            text-align: center;
+        }
+
+        .garden-details h3 {
+            margin-bottom: 12px;
+            color: #81c784;
+        }
+
+        .garden-details p {
+            margin: 10px 0;
+            color: #bbb;
+            line-height: 1.5;
+        }
+
+        .garden-detail-image-frame {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+            margin-bottom: 12px;
+            padding: 8px;
+            border: 1px solid #668266;
+            border-radius: 8px;
+            background: #111;
+        }
+
+        .garden-detail-image-frame img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .garden-details .cta-btn {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .elder-choice-list {
+            display: grid;
+            gap: 8px;
+            margin-top: 14px;
+            text-align: left;
+        }
+
+        .elder-choice {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid #466d48;
+            border-radius: 8px;
+            background: #202820;
+            color: #ddd;
+            cursor: pointer;
+            line-height: 1.4;
+        }
+
+        .elder-choice:has(input:checked) {
+            border-color: #81c784;
+            background: #293a2a;
+        }
+
+        .seed-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #466d48;
+            border-radius: 8px;
+            background: #202820;
+            color: white;
+        }
+
+        .garden-pot {
+            min-height: 210px;
+            padding: 14px;
+            border: 1px solid #3b553b;
+            border-radius: 12px;
+            background: #202820;
+            color: white;
+            cursor: pointer;
+        }
+
+        .garden-pot:hover:not(:disabled) {
+            border-color: #81c784;
+            background: #293a2a;
+        }
+
+        .garden-pot.selected {
+            border-color: #81c784;
+            box-shadow: 0 0 0 2px #81c78455;
+        }
+
+        .garden-pot img {
+            display: block;
+            width: 100%;
+            height: 120px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .garden-pot small {
+            display: block;
+            margin-top: 6px;
+            color: #aaa;
+        }
+
+        .sprat-photo {
+            display: block;
+            width: 180px;
+            height: 135px;
+            margin: 8px auto 12px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid #456d43;
+            background: #111;
+        }
+
+        .photo-credit {
+            display: block;
+            margin-bottom: 22px;
+            color: #888;
+            font-size: 0.75rem;
+        }
+
+        .encounter-track {
+            position: relative;
+            height: 38px;
+            margin: 28px 0 14px;
+            overflow: hidden;
+            border: 1px solid #555;
+            border-radius: 8px;
+            background: #111;
+            touch-action: none;
+        }
+
+        .target-bar,
+        .player-bar {
+            position: absolute;
+            top: 0;
+            height: 100%;
+        }
+
+        .target-bar {
+            width: 1.2%;
+            min-width: 4px;
+            background: #f04444;
+            box-shadow: 0 0 10px #f0444480;
+        }
+
+        .player-bar {
+            width: 14%;
+            min-width: 28px;
+            border: 2px solid #47d96b;
+            background: rgba(71, 217, 107, 0.5);
+            box-shadow: 0 0 10px #47d96b80;
+        }
+
+        .hold-btn {
+            min-width: 220px;
+            user-select: none;
+            touch-action: none;
+        }
+
+        .hold-btn:active {
+            background-color: #1e5c25;
+        }
+
+        .progress-track {
+            height: 10px;
+            margin: 18px 0 8px;
+            overflow: hidden;
+            border-radius: 8px;
+            background: #333;
+        }
+
+        .progress-fill {
+            width: 0;
+            height: 100%;
+            background: #81c784;
+            transition: width 0.08s linear;
+        }
+
+        @media (max-width: 600px) {
+            .game-panel {
+                margin-top: 36px;
+                padding: 24px 16px;
+            }
+
+            .save-slot {
+                width: 100%;
+            }
+
+            .inventory-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .garden-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .garden-pots {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation GUI -->
+    <nav class="navbar">
+        <button onclick="showScreen('home-screen')">Home</button>
+        <button onclick="showScreen('leaderboard-screen')">Leaderboard</button>
+        <span class="navbar-spacer"></span>
+        <span id="account-email" class="account-email" hidden></span>
+        <button id="account-action" class="account-action" type="button" onclick="handleAccountAction()">Sign in</button>
+    </nav>
+
+    <!-- 1. HOME SCREEN GUI -->
+    <section id="home-screen" class="screen active">
+        <div class="hero">
+            <h1>Dionaea Muscipula</h1>
+            <p>Explore the absolute strongest and biggest Venus Flytraps in existence.</p>
+            <button class="cta-btn" onclick="showScreen('leaderboard-screen')">Leaderboards</button>
+            <button class="cta-btn" onclick="openGameMenu()">Game</button>
+            <p class="home-note">If you want the strongest Dionaea Muscipula cultivar in terms of catching the most strong prey (such as wasps, beetles, and spiders) with the least fails, find the 'strongest' leaderboard category</p>
+        </div>
+    </section>
+
+    <section id="game-menu-screen" class="screen">
+        <button class="back-btn" type="button" aria-label="Back to home" onclick="showScreen('home-screen')">&lt;</button>
+        <div class="game-panel">
+            <h2>Game</h2>
+            <p>Start a new garden or continue a saved game.</p>
+            <div class="game-actions">
+                <button class="cta-btn" type="button" onclick="showSaveSlots('new')">New Game</button>
+                <button class="cta-btn" type="button" onclick="showSaveSlots('load')">Load Game</button>
+            </div>
+            <div id="save-slots" class="save-slots" aria-live="polite"></div>
+            <p id="save-status" class="game-status" role="status"></p>
+        </div>
+    </section>
+
+    <section id="account-screen" class="screen">
+        <button class="back-btn" type="button" aria-label="Back to home" onclick="showScreen('home-screen')">&lt;</button>
+        <div class="game-panel">
+            <h2>Game account</h2>
+            <p>Create a local account to save your garden only on this device, or use an online account to sync progress across devices. Sign-ins last up to 30 days.</p>
+            <form class="account-form" onsubmit="return false">
+                <label for="account-email-input">Email</label>
+                <input id="account-email-input" type="email" autocomplete="email" required>
+                <label for="account-password-input">Password (at least 8 characters)</label>
+                <input id="account-password-input" type="password" autocomplete="current-password" minlength="8" required>
+            </form>
+            <div class="account-actions">
+                <button class="cta-btn" type="button" onclick="authenticateAccount('signup')">Create online account</button>
+                <button class="cta-btn" type="button" onclick="authenticateAccount('signin')">Log in online</button>
+                <button class="cta-btn" type="button" onclick="authenticateLocalAccount('signup')">Create local account</button>
+                <button class="cta-btn" type="button" onclick="authenticateLocalAccount('signin')">Log in locally</button>
+            </div>
+            <p id="account-message" class="account-message" role="status" aria-live="polite">Local accounts and saves stay in this browser and cannot sync to other devices.</p>
+        </div>
+    </section>
+
+    <section id="game-screen" class="screen">
+        <button class="back-btn" type="button" aria-label="Back to game menu" onclick="openGameMenu()">&lt;</button>
+        <div class="game-panel">
+            <h2>Game</h2>
+            <p id="active-slot-label"></p>
+            <p id="energy-balance" class="energy-balance" aria-live="polite">Energy: 0</p>
+            <p id="game-progress-label"></p>
+            <p id="sync-status" class="game-status" role="status">Progress saves to your account.</p>
+            <div class="game-actions">
+                <button class="cta-btn" type="button" onclick="startEncounter()">Play</button>
+                <button class="cta-btn" type="button" onclick="showInventory()">Inventory</button>
+                <button class="cta-btn" type="button" onclick="showGarden()">Garden</button>
+                <button class="cta-btn" type="button" onclick="showUpgrades()">Upgrades</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="inventory-screen" class="screen">
+        <button class="back-btn" type="button" aria-label="Back to game" onclick="showScreen('game-screen')">&lt;</button>
+        <div class="game-panel inventory-panel">
+            <h2>Inventory</h2>
+            <p id="inventory-energy" class="energy-balance">Energy: 0</p>
+            <div class="inventory-tabs" role="tablist" aria-label="Inventory categories">
+                <button id="plants-tab" class="tab-btn active" type="button" role="tab" aria-selected="true" aria-controls="plants-panel" onclick="showInventoryTab('plants')">Plants</button>
+                <button id="seeds-tab" class="tab-btn" type="button" role="tab" aria-selected="false" aria-controls="seeds-panel" onclick="showInventoryTab('seeds')">Seeds</button>
+            </div>
+            <div id="plants-panel" class="inventory-tab-panel active" role="tabpanel" aria-labelledby="plants-tab">
+                <div class="inventory-layout">
+                    <div id="inventory-items" class="inventory-items"></div>
+                    <aside id="plant-details" class="plant-details" aria-live="polite">
+                        <p>Select a plant to view its details.</p>
+                    </aside>
+                </div>
+            </div>
+            <div id="seeds-panel" class="inventory-tab-panel" role="tabpanel" aria-labelledby="seeds-tab">
+                <div id="seed-inventory-list" class="seed-inventory-list"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="garden-screen" class="screen">
+        <button class="back-btn" type="button" aria-label="Back to game" onclick="showScreen('game-screen')">&lt;</button>
+        <div class="game-panel garden-panel">
+            <h2>Garden</h2>
+            <p id="garden-energy" class="energy-balance">Energy: 0</p>
+            <div class="garden-layout">
+                <div id="garden-pots" class="garden-pots"></div>
+                <aside id="garden-details" class="garden-details" aria-live="polite">
+                    <p>Select a pot to view its contents.</p>
+                </aside>
+            </div>
+            <p id="garden-status" class="game-status" role="status"></p>
+        </div>
+    </section>
+
+    <section id="upgrades-screen" class="screen">
+        <button class="back-btn" type="button" aria-label="Back to game" onclick="showScreen('game-screen')">&lt;</button>
+        <div class="game-panel">
+            <h2>Upgrades</h2>
+            <p>There are no upgrades available yet.</p>
+        </div>
+    </section>
+
+    <section id="encounter-screen" class="screen">
+        <button class="back-btn" type="button" aria-label="Back to game" onclick="stopEncounter(); showScreen('game-screen')">&lt;</button>
+        <div class="game-panel">
+            <h2 id="encounter-title">First Encounter</h2>
+            <img class="sprat-photo" src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Early_stages_of_a_Venus_flytrap_1.jpg" alt="Young Venus flytrap with small traps, at an early stage of growth">
+            <small class="photo-credit">Photo: Tippitiwichet, CC BY 2.0 · Wikimedia Commons</small>
+            <p>You are a <strong id="encounter-plant-name">Baby Sprat</strong>. Your first opponent is a <strong>Flightless fruit fly</strong>.</p>
+            <p>Hold the button to move the green bar right. Release to move it left. Stay on the moving red bar for 3 seconds in a row!</p>
+            <div class="encounter-track" aria-label="Catch meter">
+                <div id="target-bar" class="target-bar"></div>
+                <div id="player-bar" class="player-bar"></div>
+            </div>
+            <div class="progress-track" aria-label="Catch progress">
+                <div id="catch-progress" class="progress-fill"></div>
+            </div>
+            <p id="encounter-status" role="status">Line up with the red bar!</p>
+            <button id="hold-button" class="cta-btn hold-btn" type="button">Hold to catch</button>
+        </div>
+    </section>
+
+    <!-- 2. LEADERBOARD SCREEN GUI -->
+    <section id="leaderboard-screen" class="screen">
+        <button class="back-btn" type="button" aria-label="Back to home" onclick="showScreen('home-screen')">&lt;</button>
+        <h2>Leaderboard</h2>
+        <div class="gui-tabs">
+            <button class="tab-btn" type="button" onclick="switchCategory('strongest')">Strongest</button>
+            <button class="tab-btn" type="button" onclick="switchCategory('biggest')">Biggest</button>
+            <button class="tab-btn" type="button" onclick="switchCategory('capture-rate')">Capture Rate</button>
+        </div>
+    </section>
+
+    <!-- 3. STRONGEST SCREEN GUI -->
+    <section id="strongest-screen" class="screen">
+        <button class="back-btn" type="button" aria-label="Back to leaderboard choices" onclick="showScreen('leaderboard-screen')">&lt;</button>
+        <h2>Strongest</h2>
+        <div id="strongest-list" class="list-container active">
+            <h3>Top 3 Strongest Cultivars</h3>
+            <div class="flytrap-list">
+                <div class="flytrap-card">
+                    <div class="card-image">
+                        <img alt="Venus flytrap cultivar Jaws" src="https://www.californiacarnivores.com/cdn/shop/files/Dionaea_Jaws_Venus_Flytrap.jpg" />
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">3. Jaws</div>
+                        <p class="card-description">
+                            Jaws is a vigorous Venus flytrap cultivar with distinctive sawtoothed traps,
+                            very fast closing speed, and a high catch rate. It is a more common cultivar
+                            that is still very strong and is a great all-rounder. It is very good for catching
+                            stronger bugs just like B52 and DC XL, but isn't as good though can catch
+                            small bugs very well.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flytrap-card">
+                    <div class="card-image">
+                        <img alt="Venus flytrap cultivar DC-XL" src="https://www.californiacarnivores.com/cdn/shop/files/Dionaea_DC-XL_Venus_Flytrap.jpg" />
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">2. DC XL</div>
+                        <p class="card-description">
+                            DC XL is known for its huge traps, which are around the same size as B52's
+                            however are not as thick or strong as B52's traps. The traps are more high up
+                            than B52s which are practically touching the ground. DC XL is still a very strong
+                            cultivar and is a great choice if you want to kill more small insects.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flytrap-card">
+                    <div class="card-image">
+                        <img alt="Venus flytrap cultivar B52" src="https://static.wixstatic.com/media/642f51_d4a747602a7f4a77abb196fbe7986f8b~mv2.jpg/v1/fill/w_560,h_710,al_c,lg_1,q_85,enc_avif,quality_auto/642f51_d4a747602a7f4a77abb196fbe7986f8b~mv2.jpg" />
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">1. B52</div>
+                        <p class="card-description">
+                            B52 has one of the thickest walls of any venus fly trap cultivar, 
+                            has fast closing speed, massive traps, and has an very high catch rate.
+                            This makes it the strongest venus fly trap cultivar for catching stronger
+                            bugs such as wasps, hornets, and even some beetles. It has very low, 
+                            practically touching the ground traps. It is a monster for catching strong 
+                            prey and is the strongest fly trap cultivar in all of existence
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- 4. BIGGEST SCREEN GUI -->
+    <section id="biggest-screen" class="screen">
+        <button class="back-btn" type="button" aria-label="Back to leaderboard choices" onclick="showScreen('leaderboard-screen')">&lt;</button>
+        <h2>Biggest</h2>
+
+        <div class="gui-tabs">
+            <button id="tab-overall" class="tab-btn active" onclick="switchBiggestCategory('overall')">Overall</button>
+            <button id="tab-potential" class="tab-btn" onclick="switchBiggestCategory('potential')">Potential</button>
+        </div>
+
+        <div id="overall-list" class="list-container active">
+            <h3>Overall Leaderboard</h3>
+            <div class="flytrap-list">
+                <div class="flytrap-card">
+                    <div class="card-image">
+                        <img alt="Venus flytrap cultivar B52" src="https://static.wixstatic.com/media/642f51_d4a747602a7f4a77abb196fbe7986f8b~mv2.jpg/v1/fill/w_560,h_710,al_c,lg_1,q_85,enc_avif,quality_auto/642f51_d4a747602a7f4a77abb196f8b~mv2.jpg" />
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">1. B52</div>
+                        <p class="card-description">The B52 produces some of the largest traps in the world,
+                            and they do it consistently. Almost all B52 traps are the same size, gigantic, monster
+                            sized traps. B52 is the undisputed champion of the biggest venus flytrap cultivars
+                            when looking at consistency and overall size.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flytrap-card">
+                    <div class="card-image">
+                        <img alt="Venus flytrap cultivar King Henry" src="https://cedarbridgebotanicals.com/cdn/shop/files/rn-image_picker_lib_temp_3e9ebdfe-32c5-4a4b-9677-9cdf2824f2f3.jpg?v=1750195606" />
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">2. King Henry</div>
+                        <p class="card-description">King Henry is a very large cultivar that not only produces some
+                            of the largest traps in the world, but also produces them consistently. They are
+                            great for beginners, with excellent vigour and growth rate, it is highly recommendable.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flytrap-card">
+                    <div class="card-image">
+                        <img alt="Venus flytrap cultivar DC XL" src="https://www.californiacarnivores.com/cdn/shop/files/Dionaea_DC-XL_Venus_Flytrap.jpg" />
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">3. DC XL</div>
+                        <p class="card-description">DC XL has been known for having massive traps, sometimes even
+                            beating B52 in size. However, although it can be that big, they are not as consistent
+                            as B52 or King Henry. While DC XL is still a massive cultivar, it doesnt have the consistency
+                            that the other cultivars have.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="potential-list" class="list-container">
+            <h3>Potential Leaderboard</h3>
+            <div class="flytrap-list">
+                <div class="flytrap-card">
+                    <div class="card-image">
+                        <img alt="Venus flytrap cultivar GJ Montecore" src="https://starhort.com/cdn/shop/files/IMG_5846.jpg?v=1786369885" />
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">1. GJ Montecore</div>
+                        <p class="card-description">The GJ Montecore is one of the biggest venus fly trap cultivars
+                            when you look at its growth potential. It can produce some of the largest traps in the
+                            world, which can outsize B52 and King Henry. However, this cultivar is not consistent
+                            and also requires a lot of care to reach its full potential size.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flytrap-card">
+                    <div class="card-image">
+                        <img alt="Venus flytrap cultivar Alien" src="https://rainbowcarnivorousplants.com/cdn/shop/files/20240618-151712_2992x.jpg?v=1718749139" />
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">2. Alien</div>
+                        <p class="card-description">Alien is another large cultivar with insanely high growth potential.
+                            They are known to have extremely inconsistent trap sizes and weird growth patterns, but they
+                            have the potential to have traps near the size of the GJ Montecore and can outsize B52. They
+                            are very inconsistent, which makes them a very risky cultivar to grow, but when they do grow
+                            massive, they are massive.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flytrap-card">
+                    <div class="card-image">
+                        <img alt="Venus flytrap cultivar DC XL" src="https://www.californiacarnivores.com/cdn/shop/files/Dionaea_DC-XL_Venus_Flytrap.jpg" />
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">3. DC XL</div>
+                        <p class="card-description">DC XL has slightly higher growth potential than B52, though not as consistent,
+                            they can grow some massive traps. They have very high vigour and are very easy to grow, which also
+                            makes them perfect for beginners. Although they do not have as much growth potential as GJ Montecore
+                            or Alien, they are much more consistent than them which actually makes them better most of the time.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. CAPTURE RATE SCREEN GUI -->
+    <section id="capture-rate-screen" class="screen">
+        <button class="back-btn" type="button" aria-label="Back to leaderboard choices" onclick="showScreen('leaderboard-screen')">&lt;</button>
+        <h2>Capture Rate</h2>
+        <h3 class="capture-rate-subtitle">Cultivars ranked by how many flies they catch in the least amount of time</h3>
+        <div class="flytrap-list">
+            <div class="flytrap-card">
+                <div class="card-image">
+                    <img alt="Venus flytrap cultivar B52" src="https://static.wixstatic.com/media/642f51_d4a747602a7f4a77abb196fbe7986f8b~mv2.jpg/v1/fill/w_560,h_710,al_c,lg_1,q_85,enc_avif,quality_auto/642f51_d4a747602a7f4a77abb196fbe7986f8b~mv2.jpg" />
+                </div>
+                <div class="card-content">
+                    <div class="card-title">1. B52 (tied)</div>
+                    <p class="card-description">Tied for first place in capture rate.</p>
+                </div>
+            </div>
+
+            <div class="flytrap-card">
+                <div class="card-image">
+                    <img alt="Venus flytrap cultivar DC XL" src="https://www.californiacarnivores.com/cdn/shop/files/Dionaea_DC-XL_Venus_Flytrap.jpg" />
+                </div>
+                <div class="card-content">
+                    <div class="card-title">1. DC XL (tied)</div>
+                    <p class="card-description">Tied for first place in capture rate.</p>
+                </div>
+            </div>
+
+            <div class="flytrap-card">
+                <div class="card-image">
+                    <img alt="Venus flytrap cultivar SD Kronos" src="https://www.carnivorousplantresource.com/wp-content/uploads/2022/03/IMG_2496.jpeg" />
+                </div>
+                <div class="card-content">
+                    <div class="card-title">2. SD Kronos</div>
+                    <p class="card-description">Has massive traps</p>
+                </div>
+            </div>
+
+            <div class="flytrap-card">
+                <div class="card-image">
+                    <img alt="Venus flytrap cultivar King Henry" src="https://cedarbridgebotanicals.com/cdn/shop/files/rn-image_picker_lib_temp_3e9ebdfe-32c5-4a4b-9677-9cdf2824f2f3.jpg?v=1750195606" />
+                </div>
+                <div class="card-content">
+                    <div class="card-title">3. King Henry</div>
+                    <p class="card-description">King Henry has massive traps, almost as big as B52s, this helps it with being
+                        able to catch much more bugs than most cultivars and also has a low miss rate. They are very good at
+                        catching bugs and are also great for catching bigger bugs from it's size.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://qkvckuaqrzerycutyljy.supabase.co';
+        const supabasePublishableKey = 'sb_publishable_lmptRxqjoVg5bbfx1RqmPg_r01JMi1Q';
+        const legacySaveStorageKey = 'venusFlytrapInfoctiumSaves';
+        const sessionStartedStorageKey = 'venusFlytrapInfoctiumSessionStartedAt';
+        const localAccountsStorageKey = 'venusFlytrapInfoctiumLocalAccounts';
+        const localSessionStorageKey = 'venusFlytrapInfoctiumLocalSession';
+        const localPasswordIterations = 250000;
+        const sessionMaxAgeMs = 30 * 24 * 60 * 60 * 1000;
+        let supabaseClient = null;
+        let currentUser = null;
+        let saveSlots = {};
+        let saveQueue = Promise.resolve();
+        let activeSaveSlot = null;
+        let saveSelectionMode = 'new';
+        let playerPosition = 0;
+        let targetPosition = 50;
+        let targetVelocity = 14;
+        let isHolding = false;
+        let encounterActive = false;
+        let encounterWon = false;
+        let captureProgressMs = 0;
+        let encounterElapsedMs = 0;
+        let animationFrameId = null;
+        let targetMoveTimer = null;
+        let previousFrameTime = null;
+        let encounterPlantId = 'baby-sprat';
+        let selectedGardenPot = null;
+        let seedMenuOpen = false;
+        let selectedElderType = null;
+
+        const baseCatchBarWidth = 14;
+        const plantCatalog = {
+            'baby-sprat': {
+                name: 'Baby Sprat',
+                description: 'Sprats are the weakest cultivar of venus fly traps, the one you were born with.',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Early_stages_of_a_Venus_flytrap_1.jpg',
+                imageAlt: 'Baby Venus flytrap with small traps',
+                trapStrength: 1
+            },
+            'mature-sprat': {
+                name: 'Mature Sprat',
+                description: 'Sprats are the weakest cultivar of venus fly traps, the one you were born with.',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Early_stages_of_a_Venus_flytrap_1.jpg',
+                imageAlt: 'Mature Sprat Venus flytrap',
+                trapStrength: 2.5
+            },
+            'mother-sprat': {
+                name: 'Mother Sprat',
+                description: 'An evolved Sprat with stronger traps, grown from a Mature Sprat.',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Early_stages_of_a_Venus_flytrap_1.jpg',
+                imageAlt: 'Mother Sprat Venus flytrap',
+                trapStrength: 3.75
+            },
+            'elder-sprat-sneaky': {
+                name: 'Elder Sprat (Sneaky)',
+                description: 'A sneaky Elder Sprat whose moving target travels 1.5 times slower.',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Early_stages_of_a_Venus_flytrap_1.jpg',
+                imageAlt: 'Sneaky Elder Sprat Venus flytrap',
+                trapStrength: 5.625,
+                targetSpeedMultiplier: 1 / 1.5,
+                captureDuration: 3000,
+                rewardMultiplier: 1
+            },
+            'elder-sprat-powerful': {
+                name: 'Elder Sprat (Powerful)',
+                description: 'A powerful Elder Sprat with exceptionally strong traps that catch prey faster.',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Early_stages_of_a_Venus_flytrap_1.jpg',
+                imageAlt: 'Powerful Elder Sprat Venus flytrap',
+                trapStrength: 6.5625,
+                targetSpeedMultiplier: 1,
+                captureDuration: 2500,
+                rewardMultiplier: 1
+            },
+            'elder-sprat-lucky': {
+                name: 'Elder Sprat (Lucky)',
+                description: 'A lucky Elder Sprat that earns twice the encounter rewards.',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Early_stages_of_a_Venus_flytrap_1.jpg',
+                imageAlt: 'Lucky Elder Sprat Venus flytrap',
+                trapStrength: 5.625,
+                targetSpeedMultiplier: 1,
+                captureDuration: 3000,
+                rewardMultiplier: 2
+            }
+        };
+
+        const elderChoices = [
+            { id: 'elder-sprat-sneaky', title: 'Sneaky', description: 'Red bar moves 1.5x slower.' },
+            { id: 'elder-sprat-powerful', title: 'Powerful', description: '1.75x Mother Sprat strength and catches in 2.5 seconds.' },
+            { id: 'elder-sprat-lucky', title: 'Lucky', description: '1.5x Mother Sprat strength and 2x rewards.' }
+        ];
+        const elderUpgradeCost = { energy: 210, seeds: 20 };
+
+        function getCatchBarWidth(plantId) {
+            const plant = plantCatalog[plantId] || plantCatalog['baby-sprat'];
+            return Math.min(100, baseCatchBarWidth * plant.trapStrength);
+        }
+
+        function getPlantStat(plantId, stat, fallback) {
+            const plant = plantCatalog[plantId];
+            return plant && Number.isFinite(plant[stat]) ? plant[stat] : fallback;
+        }
+
+        function getSaveSlots() {
+            return saveSlots;
+        }
+
+        function normalizeSave(save, slotNumber) {
+            save.slot = save.slot || slotNumber;
+            save.energy = Number.isFinite(save.energy) ? save.energy : 0;
+            save.inventory = Array.isArray(save.inventory) ? save.inventory : [];
+            if (!save.inventory.includes('baby-sprat')) {
+                save.inventory.unshift('baby-sprat');
+            }
+
+            const knownPlantIds = Object.keys(plantCatalog);
+            if (knownPlantIds.includes(save.equippedPlant) && !save.inventory.includes(save.equippedPlant)) {
+                save.inventory.push(save.equippedPlant);
+            }
+            const savedPlantId = knownPlantIds.find(plantId => plantCatalog[plantId].name === save.plant);
+            if (savedPlantId) {
+                const currentPlantId = savedPlantId;
+                if (!save.inventory.includes(currentPlantId)) {
+                    save.inventory.push(currentPlantId);
+                }
+            }
+            const hasGardenPots = Array.isArray(save.gardenPots);
+            save.gardenPots = hasGardenPots ? save.gardenPots.slice(0, 3) : [];
+            while (save.gardenPots.length < 3) {
+                save.gardenPots.push(null);
+            }
+            if (!hasGardenPots) {
+                save.gardenPots[0] = savedPlantId || 'baby-sprat';
+            }
+            save.gardenPots.forEach(plantId => {
+                if (knownPlantIds.includes(plantId) && !save.inventory.includes(plantId)) {
+                    save.inventory.push(plantId);
+                }
+            });
+            save.seeds = save.seeds && typeof save.seeds === 'object' ? save.seeds : {};
+            save.seeds.sprat = Number.isInteger(save.seeds.sprat) && save.seeds.sprat > 0 ? save.seeds.sprat : 0;
+            save.seedMisses = Number.isInteger(save.seedMisses) && save.seedMisses >= 0
+                ? save.seedMisses
+                : (save.won && save.seeds.sprat === 0 ? 4 : 0);
+            if (!plantCatalog[save.equippedPlant] || !save.inventory.includes(save.equippedPlant)) {
+                save.equippedPlant = savedPlantId || 'baby-sprat';
+            }
+            if (save.won && !save.rewardClaimed) {
+                save.energy += 3;
+                save.rewardClaimed = true;
+            }
+            return save;
+        }
+
+        function writeSaveSlots(slots) {
+            saveSlots = slots;
+            if (currentUser?.isLocalAccount) {
+                try {
+                    const accounts = JSON.parse(localStorage.getItem(localAccountsStorageKey) || '{}');
+                    const account = accounts[currentUser.email.toLowerCase()];
+                    if (!account || account.id !== currentUser.id) {
+                        throw new Error('The local account could not be found. Sign in again to save progress.');
+                    }
+                    account.saves = slots;
+                    localStorage.setItem(localAccountsStorageKey, JSON.stringify(accounts));
+                    document.getElementById('sync-status').textContent = 'Progress saved on this device only.';
+                } catch (error) {
+                    console.error('Unable to save local game progress:', error);
+                    const message = `Local save failed: ${error.message || 'Check this browser’s storage settings.'}`;
+                    document.getElementById('sync-status').textContent = message;
+                    document.getElementById('save-status').textContent = message;
+                }
+                return;
+            }
+            if (!currentUser || !supabaseClient) {
+                return;
+            }
+
+            const userId = currentUser.id;
+            const snapshot = JSON.parse(JSON.stringify(slots));
+            document.getElementById('sync-status').textContent = 'Saving progress to your account…';
+            saveQueue = saveQueue.then(async () => {
+                if (currentUser?.id !== userId) {
+                    return;
+                }
+                const { error } = await supabaseClient
+                    .from('game_saves')
+                    .upsert({ user_id: userId, saves: snapshot, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
+                if (error) {
+                    throw error;
+                }
+                document.getElementById('sync-status').textContent = 'Progress saved to your account.';
+                return true;
+            }).catch(error => {
+                console.error('Unable to save game progress to Supabase:', error);
+                const message = `Cloud save failed: ${error.message || 'Please try again.'}`;
+                document.getElementById('sync-status').textContent = message;
+                document.getElementById('save-status').textContent = message;
+                return false;
+            });
+        }
+
+        function openGameMenu() {
+            if (!currentUser) {
+                openAccountScreen();
+                return;
+            }
+            document.getElementById('save-slots').replaceChildren();
+            document.getElementById('save-status').textContent = '';
+            showScreen('game-menu-screen');
+        }
+
+        function setAccountControls() {
+            const action = document.getElementById('account-action');
+            const email = document.getElementById('account-email');
+            action.textContent = currentUser ? 'Log out' : 'Sign in';
+            email.hidden = !currentUser;
+            email.textContent = currentUser ? `${currentUser.email}${currentUser.isLocalAccount ? ' (local)' : ''}` : '';
+        }
+
+        function openAccountScreen() {
+            const message = document.getElementById('account-message');
+            if (location.protocol === 'file:') {
+                message.textContent = 'Local accounts work in this browser. Online accounts need this site to be hosted at an HTTPS address.';
+            } else if (!window.supabase) {
+                message.textContent = 'Local accounts work in this browser. The online account service could not load.';
+            } else {
+                message.textContent = 'Local accounts and saves stay in this browser and cannot sync to other devices.';
+            }
+            showScreen('account-screen');
+        }
+
+        function handleAccountAction() {
+            if (currentUser) {
+                logoutAccount();
+                return;
+            }
+            openAccountScreen();
+        }
+
+        async function loadAccountSaves() {
+            const { data, error } = await supabaseClient
+                .from('game_saves')
+                .select('saves')
+                .eq('user_id', currentUser.id)
+                .maybeSingle();
+            if (error) {
+                throw error;
+            }
+            if (data && (!data.saves || typeof data.saves !== 'object' || Array.isArray(data.saves))) {
+                throw new Error('The saved game data is invalid. Contact the site owner for help.');
+            }
+            if (data) {
+                saveSlots = data.saves;
+                return;
+            }
+
+            const legacySave = localStorage.getItem(legacySaveStorageKey);
+            if (!legacySave) {
+                saveSlots = {};
+                return;
+            }
+            let legacySlots;
+            try {
+                legacySlots = JSON.parse(legacySave);
+            } catch {
+                throw new Error('The old local save could not be read. It has been left unchanged.');
+            }
+            if (!legacySlots || typeof legacySlots !== 'object' || Array.isArray(legacySlots)) {
+                throw new Error('The old local save has an invalid format. It has been left unchanged.');
+            }
+            if (window.confirm('A local game save was found on this device. Upload it to this account so it can be used on other devices?')) {
+                saveSlots = legacySlots;
+                writeSaveSlots(saveSlots);
+                if (await saveQueue === false) {
+                    throw new Error('The old save could not be uploaded. The local copy has been kept.');
+                }
+                localStorage.removeItem(legacySaveStorageKey);
+            } else {
+                saveSlots = {};
+            }
+        }
+
+        function getLocalAccounts() {
+            const stored = localStorage.getItem(localAccountsStorageKey);
+            if (!stored) {
+                return {};
+            }
+            const accounts = JSON.parse(stored);
+            if (!accounts || typeof accounts !== 'object' || Array.isArray(accounts)) {
+                throw new Error('Local account storage is invalid. It has not been changed.');
+            }
+            return accounts;
+        }
+
+        async function hashLocalPassword(password, salt) {
+            if (!crypto.subtle) {
+                throw new Error('This browser cannot securely store local account passwords. Try a current version of Chrome, Edge, Firefox, or Safari.');
+            }
+            const key = await crypto.subtle.importKey(
+                'raw',
+                new TextEncoder().encode(password),
+                'PBKDF2',
+                false,
+                ['deriveBits']
+            );
+            const derivedBits = await crypto.subtle.deriveBits({
+                name: 'PBKDF2',
+                hash: 'SHA-256',
+                salt,
+                iterations: localPasswordIterations
+            }, key, 256);
+            return Array.from(new Uint8Array(derivedBits), byte => byte.toString(16).padStart(2, '0')).join('');
+        }
+
+        function constantTimeEqual(left, right) {
+            if (left.length !== right.length) {
+                return false;
+            }
+            let difference = 0;
+            for (let index = 0; index < left.length; index += 1) {
+                difference |= left.charCodeAt(index) ^ right.charCodeAt(index);
+            }
+            return difference === 0;
+        }
+
+        async function authenticateLocalAccount(action) {
+            const message = document.getElementById('account-message');
+            const email = document.getElementById('account-email-input').value.trim().toLowerCase();
+            const password = document.getElementById('account-password-input').value;
+            if (!email || password.length < 8) {
+                message.textContent = 'Enter an email address and a password with at least 8 characters.';
+                return;
+            }
+            if (!crypto.subtle) {
+                message.textContent = 'Secure local accounts are not supported by this browser. Try a current browser.';
+                return;
+            }
+
+            message.textContent = action === 'signup' ? 'Creating local account…' : 'Checking local account…';
+            try {
+                const accounts = getLocalAccounts();
+                let account = accounts[email];
+                let shouldRemoveLegacySave = false;
+                if (action === 'signup') {
+                    if (account) {
+                        message.textContent = 'A local account with this email already exists in this browser. Log in locally instead.';
+                        return;
+                    }
+                    const salt = crypto.getRandomValues(new Uint8Array(16));
+                    const saltHex = Array.from(salt, byte => byte.toString(16).padStart(2, '0')).join('');
+                    account = {
+                        id: crypto.randomUUID(),
+                        email,
+                        salt: saltHex,
+                        passwordHash: await hashLocalPassword(password, salt),
+                        saves: {}
+                    };
+                    const legacySave = localStorage.getItem(legacySaveStorageKey);
+                    if (legacySave && window.confirm('A game save was found on this device. Add it to your new local account?')) {
+                        const parsedSave = JSON.parse(legacySave);
+                        if (!parsedSave || typeof parsedSave !== 'object' || Array.isArray(parsedSave)) {
+                            throw new Error('The existing local save has an invalid format and was not imported.');
+                        }
+                        account.saves = parsedSave;
+                        shouldRemoveLegacySave = true;
+                    }
+                    accounts[email] = account;
+                    localStorage.setItem(localAccountsStorageKey, JSON.stringify(accounts));
+                    if (shouldRemoveLegacySave) {
+                        localStorage.removeItem(legacySaveStorageKey);
+                    }
+                } else {
+                    if (!account || !account.salt || !account.passwordHash) {
+                        message.textContent = 'No local account was found with that email in this browser.';
+                        return;
+                    }
+                    const salt = Uint8Array.from(account.salt.match(/.{2}/g), pair => Number.parseInt(pair, 16));
+                    const passwordHash = await hashLocalPassword(password, salt);
+                    if (!constantTimeEqual(passwordHash, account.passwordHash)) {
+                        message.textContent = 'The email or password is incorrect.';
+                        return;
+                    }
+                }
+
+                if (supabaseClient) {
+                    const { error } = await supabaseClient.auth.signOut();
+                    if (error) {
+                        throw error;
+                    }
+                }
+                currentUser = { id: account.id, email: account.email, isLocalAccount: true };
+                saveSlots = account.saves || {};
+                localStorage.removeItem(sessionStartedStorageKey);
+                localStorage.setItem(localSessionStorageKey, JSON.stringify({
+                    email,
+                    id: account.id,
+                    startedAt: Date.now()
+                }));
+                setAccountControls();
+                message.textContent = '';
+                openGameMenu();
+            } catch (error) {
+                message.textContent = `Local account error: ${error.message || 'Check this browser’s storage settings and try again.'}`;
+            }
+        }
+
+        async function authenticateAccount(action) {
+            const message = document.getElementById('account-message');
+            const email = document.getElementById('account-email-input').value.trim();
+            const password = document.getElementById('account-password-input').value;
+            message.textContent = '';
+            if (!supabaseClient) {
+                message.textContent = 'Online sign-in needs the hosted HTTPS site. You can create a local account or log in locally here instead.';
+                return;
+            }
+            if (!email || password.length < 8) {
+                message.textContent = 'Enter an email address and a password with at least 8 characters.';
+                return;
+            }
+
+            message.textContent = action === 'signup' ? 'Creating your account…' : 'Signing in…';
+            let result;
+            try {
+                result = action === 'signup'
+                    ? await supabaseClient.auth.signUp({ email, password })
+                    : await supabaseClient.auth.signInWithPassword({ email, password });
+            } catch (error) {
+                message.textContent = `Account request failed: ${error.message || 'Please check your connection and try again.'}`;
+                return;
+            }
+            if (result.error) {
+                message.textContent = result.error.message;
+                return;
+            }
+            if (!result.data.session) {
+                message.textContent = 'Check your email for a confirmation link, then log in here.';
+                return;
+            }
+
+            try {
+                currentUser = result.data.user;
+                currentUser.isLocalAccount = false;
+                localStorage.removeItem(localSessionStorageKey);
+                localStorage.setItem(sessionStartedStorageKey, String(Date.now()));
+                await loadAccountSaves();
+                setAccountControls();
+                message.textContent = '';
+                openGameMenu();
+            } catch (error) {
+                currentUser = null;
+                saveSlots = {};
+                message.textContent = `Could not load your cloud saves: ${error.message || 'Please try again.'}`;
+            }
+        }
+
+        async function logoutAccount() {
+            document.getElementById('account-message').textContent = '';
+            try {
+                if (currentUser?.isLocalAccount) {
+                    localStorage.removeItem(localSessionStorageKey);
+                } else {
+                    if (await saveQueue === false) {
+                        throw new Error('Your latest progress may not have saved. Check the cloud save status before logging out.');
+                    }
+                    const { error } = await supabaseClient.auth.signOut();
+                    if (error) {
+                        throw error;
+                    }
+                    localStorage.removeItem(sessionStartedStorageKey);
+                }
+                currentUser = null;
+                saveSlots = {};
+                activeSaveSlot = null;
+                setAccountControls();
+                showScreen('home-screen');
+            } catch (error) {
+                const message = `Could not log out: ${error.message || 'Please try again.'}`;
+                document.getElementById('account-message').textContent = message;
+                document.getElementById('sync-status').textContent = message;
+                window.alert(message);
+            }
+        }
+
+        async function initializeAccountSystem() {
+            setAccountControls();
+            try {
+                const localSession = JSON.parse(localStorage.getItem(localSessionStorageKey) || 'null');
+                if (localSession && Date.now() - localSession.startedAt < sessionMaxAgeMs) {
+                    const localAccount = getLocalAccounts()[localSession.email];
+                    if (localAccount && localAccount.id === localSession.id) {
+                        currentUser = { id: localAccount.id, email: localAccount.email, isLocalAccount: true };
+                        saveSlots = localAccount.saves || {};
+                        setAccountControls();
+                        return;
+                    }
+                }
+                if (localSession) {
+                    localStorage.removeItem(localSessionStorageKey);
+                }
+            } catch (error) {
+                document.getElementById('account-message').textContent = `Could not restore the local account: ${error.message || 'Check this browser’s storage settings.'}`;
+            }
+            if (location.protocol === 'file:') {
+                document.getElementById('account-message').textContent = 'Local accounts work in this browser. Online accounts need this site to be hosted at an HTTPS address.';
+                return;
+            }
+            if (!window.supabase) {
+                document.getElementById('account-message').textContent = 'Local accounts work in this browser. The online account service could not load.';
+                return;
+            }
+
+            supabaseClient = window.supabase.createClient(supabaseUrl, supabasePublishableKey);
+            try {
+                const { data, error } = await supabaseClient.auth.getSession();
+                if (error) {
+                    throw error;
+                }
+                const sessionStartedAt = Number(localStorage.getItem(sessionStartedStorageKey));
+                if (data.session && sessionStartedAt && Date.now() - sessionStartedAt >= sessionMaxAgeMs) {
+                    const { error: signOutError } = await supabaseClient.auth.signOut();
+                    if (signOutError) {
+                        throw signOutError;
+                    }
+                    localStorage.removeItem(sessionStartedStorageKey);
+                } else if (data.session) {
+                    currentUser = data.session.user;
+                    if (!sessionStartedAt) {
+                        localStorage.setItem(sessionStartedStorageKey, String(Date.now()));
+                    }
+                    await loadAccountSaves();
+                    setAccountControls();
+                }
+            } catch (error) {
+                currentUser = null;
+                saveSlots = {};
+                setAccountControls();
+                document.getElementById('account-message').textContent = `Could not connect to your account: ${error.message || 'Please try again.'}`;
+            }
+        }
+
+        function showSaveSlots(mode) {
+            saveSelectionMode = mode;
+            const slotsContainer = document.getElementById('save-slots');
+            const status = document.getElementById('save-status');
+            slotsContainer.replaceChildren();
+            status.textContent = '';
+
+            const slots = getSaveSlots();
+            for (let slotNumber = 1; slotNumber <= 3; slotNumber += 1) {
+                const save = slots[slotNumber];
+                const slotItem = document.createElement('div');
+                slotItem.className = 'save-slot-item';
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'save-slot';
+                button.disabled = mode === 'load' && !save;
+                button.innerHTML = `<strong>Slot ${slotNumber}</strong><small>${save ? (save.won ? 'Flightless fruit fly caught' : 'Baby Sprat') : 'Empty'}</small>`;
+                button.addEventListener('click', () => selectSaveSlot(slotNumber));
+                slotItem.appendChild(button);
+                if (save) {
+                    const deleteButton = document.createElement('button');
+                    deleteButton.type = 'button';
+                    deleteButton.className = 'save-slot-delete';
+                    deleteButton.textContent = 'Delete save';
+                    deleteButton.addEventListener('click', () => confirmDeleteSaveSlot(slotNumber, slotItem));
+                    slotItem.appendChild(deleteButton);
+                }
+                slotsContainer.appendChild(slotItem);
+            }
+        }
+
+        function confirmDeleteSaveSlot(slotNumber, slotItem) {
+            const confirmation = document.createElement('div');
+            confirmation.className = 'save-slot-confirm';
+            confirmation.setAttribute('role', 'group');
+            confirmation.setAttribute('aria-label', `Confirm deleting save slot ${slotNumber}`);
+            const message = document.createElement('span');
+            message.textContent = `Delete all progress in Slot ${slotNumber}?`;
+            const actions = document.createElement('div');
+            actions.className = 'save-slot-confirm-actions';
+            const confirmButton = document.createElement('button');
+            confirmButton.type = 'button';
+            confirmButton.textContent = 'Yes, delete';
+            confirmButton.addEventListener('click', () => deleteSaveSlot(slotNumber));
+            const cancelButton = document.createElement('button');
+            cancelButton.type = 'button';
+            cancelButton.className = 'cancel-delete';
+            cancelButton.textContent = 'Cancel';
+            cancelButton.addEventListener('click', () => showSaveSlots(saveSelectionMode));
+            actions.append(confirmButton, cancelButton);
+            confirmation.append(message, actions);
+            slotItem.replaceChildren(slotItem.querySelector('.save-slot'), confirmation);
+        }
+
+        function deleteSaveSlot(slotNumber) {
+            const slots = getSaveSlots();
+            if (!slots[slotNumber]) {
+                return;
+            }
+            delete slots[slotNumber];
+            writeSaveSlots(slots);
+            if (activeSaveSlot === slotNumber) {
+                activeSaveSlot = null;
+            }
+            document.getElementById('save-status').textContent = `Save Slot ${slotNumber} deleted.`;
+            showSaveSlots(saveSelectionMode);
+            document.getElementById('save-status').textContent = `Save Slot ${slotNumber} deleted.`;
+        }
+
+        function selectSaveSlot(slotNumber) {
+            const status = document.getElementById('save-status');
+            const slots = getSaveSlots();
+            let save = slots[slotNumber];
+
+            if (saveSelectionMode === 'new') {
+                if (save && !window.confirm(`Slot ${slotNumber} already has a game. Replace it with a new game?`)) {
+                    return;
+                }
+                save = {
+                    slot: slotNumber,
+                    plant: 'Baby Sprat',
+                    opponent: 'Flightless fruit fly',
+                    inventory: ['baby-sprat'],
+                    equippedPlant: 'baby-sprat',
+                    gardenPots: ['baby-sprat', null, null],
+                    seeds: { sprat: 0 },
+                    energy: 0,
+                    won: false,
+                    rewardClaimed: false,
+                    updatedAt: new Date().toISOString()
+                };
+                slots[slotNumber] = save;
+                writeSaveSlots(slots);
+            }
+
+            if (!save) {
+                status.textContent = 'That save slot is empty.';
+                return;
+            }
+
+            save = normalizeSave(save, slotNumber);
+            slots[slotNumber] = save;
+            writeSaveSlots(slots);
+            activeSaveSlot = slotNumber;
+            updateGameScreen(save);
+            showScreen('game-screen');
+        }
+
+        function updateGameScreen(save) {
+            document.getElementById('active-slot-label').textContent = `Save Slot ${save.slot}`;
+            document.getElementById('energy-balance').textContent = `Energy: ${save.energy}`;
+            document.getElementById('game-progress-label').textContent = save.lastEncounterOutcome === 'timeout'
+                ? 'Time ran out. No rewards were earned.'
+                : save.won
+                ? `The Flightless fruit fly was caught! +${save.lastEncounterEnergyReward || 3} energy earned.${save.lastEncounterSeedDrop ? ` ${save.seeds.sprat > 1 ? 'Sprat seeds' : 'A Sprat seed'} dropped!` : ''}`
+                : '';
+        }
+
+        function showInventory() {
+            const saves = getSaveSlots();
+            const save = normalizeSave(saves[activeSaveSlot], activeSaveSlot);
+            saves[activeSaveSlot] = save;
+            writeSaveSlots(saves);
+            document.getElementById('inventory-energy').textContent = `Energy: ${save.energy}`;
+            const inventoryItems = document.getElementById('inventory-items');
+            inventoryItems.replaceChildren();
+            save.inventory.forEach(plantId => {
+                const plant = plantCatalog[plantId];
+                if (!plant) {
+                    return;
+                }
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className = 'plant-card';
+                card.dataset.plantId = plantId;
+                card.setAttribute('aria-label', plant.name);
+                const image = document.createElement('img');
+                image.src = plant.image;
+                image.alt = plant.imageAlt;
+                const caption = document.createElement('span');
+                caption.textContent = plant.name;
+                card.append(image, caption);
+                card.addEventListener('click', () => showPlantDetails(plantId, card));
+                inventoryItems.appendChild(card);
+            });
+            document.getElementById('plant-details').innerHTML = '<p>Select a plant to view its details.</p>';
+            const seedList = document.getElementById('seed-inventory-list');
+            seedList.replaceChildren();
+            const seedCard = document.createElement('article');
+            seedCard.className = 'seed-inventory-card';
+            const seedName = document.createElement('h3');
+            seedName.textContent = 'Sprat Seeds';
+            const seedCount = document.createElement('p');
+            seedCount.textContent = `Quantity: ${save.seeds.sprat}`;
+            seedCard.append(seedName, seedCount);
+            seedList.appendChild(seedCard);
+            showInventoryTab('plants');
+            showScreen('inventory-screen');
+        }
+
+        function showInventoryTab(tab) {
+            const showPlants = tab === 'plants';
+            document.getElementById('plants-tab').classList.toggle('active', showPlants);
+            document.getElementById('plants-tab').setAttribute('aria-selected', String(showPlants));
+            document.getElementById('seeds-tab').classList.toggle('active', !showPlants);
+            document.getElementById('seeds-tab').setAttribute('aria-selected', String(!showPlants));
+            document.getElementById('plants-panel').classList.toggle('active', showPlants);
+            document.getElementById('seeds-panel').classList.toggle('active', !showPlants);
+        }
+
+        function showPlantDetails(plantId, selectedCard) {
+            const plant = plantCatalog[plantId];
+            if (!plant) {
+                return;
+            }
+            document.querySelectorAll('.plant-card').forEach(card => card.classList.remove('selected'));
+            selectedCard.classList.add('selected');
+            const panel = document.getElementById('plant-details');
+            panel.replaceChildren();
+
+            const imageFrame = document.createElement('div');
+            imageFrame.className = 'plant-detail-image-frame';
+            const image = document.createElement('img');
+            image.src = plant.image;
+            image.alt = plant.imageAlt;
+            imageFrame.appendChild(image);
+            const name = document.createElement('h3');
+            name.textContent = plant.name;
+            const description = document.createElement('p');
+            description.textContent = plant.description;
+            const saves = getSaveSlots();
+            const save = normalizeSave(saves[activeSaveSlot], activeSaveSlot);
+            const equipButton = document.createElement('button');
+            equipButton.type = 'button';
+            equipButton.className = 'cta-btn plant-equip-btn';
+            equipButton.textContent = save.equippedPlant === plantId ? 'Equipped' : 'Equip';
+            equipButton.disabled = save.equippedPlant === plantId;
+            equipButton.addEventListener('click', () => equipPlant(plantId));
+            panel.append(imageFrame, name, description, equipButton);
+        }
+
+        function equipPlant(plantId) {
+            const saves = getSaveSlots();
+            const save = normalizeSave(saves[activeSaveSlot], activeSaveSlot);
+            if (!plantCatalog[plantId] || !save.inventory.includes(plantId)) {
+                return;
+            }
+            save.equippedPlant = plantId;
+            save.updatedAt = new Date().toISOString();
+            saves[activeSaveSlot] = save;
+            writeSaveSlots(saves);
+            updateGameScreen(save);
+            const card = document.querySelector(`.plant-card[data-plant-id="${plantId}"]`);
+            if (card) {
+                showPlantDetails(plantId, card);
+            }
+        }
+
+        function showGarden() {
+            const saves = getSaveSlots();
+            const save = normalizeSave(saves[activeSaveSlot], activeSaveSlot);
+            saves[activeSaveSlot] = save;
+            writeSaveSlots(saves);
+            document.getElementById('garden-energy').textContent = `Energy: ${save.energy}`;
+            document.getElementById('garden-status').textContent = '';
+            selectedGardenPot = null;
+            seedMenuOpen = false;
+            selectedElderType = null;
+            const pots = document.getElementById('garden-pots');
+            pots.replaceChildren();
+            save.gardenPots.forEach((plantId, index) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'garden-pot';
+                button.classList.toggle('selected', index === selectedGardenPot);
+                button.addEventListener('click', () => selectGardenPot(index));
+                const potLabel = document.createElement('strong');
+                potLabel.textContent = `Pot ${index + 1}`;
+                button.appendChild(potLabel);
+
+                if (plantId && plantCatalog[plantId]) {
+                    const plant = plantCatalog[plantId];
+                    const image = document.createElement('img');
+                    image.src = plant.image;
+                    image.alt = plant.imageAlt;
+                    const name = document.createElement('span');
+                    name.textContent = plant.name;
+                    const prompt = document.createElement('small');
+                    prompt.textContent = 'Select to manage plant';
+                    button.append(image, name, prompt);
+                } else {
+                    const emptyLabel = document.createElement('small');
+                    emptyLabel.textContent = 'Select to plant seeds';
+                    button.appendChild(emptyLabel);
+                }
+                pots.appendChild(button);
+            });
+            renderGardenDetails(save);
+            showScreen('garden-screen');
+        }
+
+        function selectGardenPot(index) {
+            selectedGardenPot = index;
+            seedMenuOpen = false;
+            selectedElderType = null;
+            document.querySelectorAll('.garden-pot').forEach((pot, potIndex) => {
+                pot.classList.toggle('selected', potIndex === index);
+            });
+            const saves = getSaveSlots();
+            renderGardenDetails(normalizeSave(saves[activeSaveSlot], activeSaveSlot));
+        }
+
+        function renderGardenDetails(save) {
+            const panel = document.getElementById('garden-details');
+            panel.replaceChildren();
+            if (selectedGardenPot === null) {
+                const prompt = document.createElement('p');
+                prompt.textContent = 'Select a pot to view its contents.';
+                panel.appendChild(prompt);
+                return;
+            }
+
+            const plantId = save.gardenPots[selectedGardenPot];
+            const heading = document.createElement('h3');
+            heading.textContent = `Pot ${selectedGardenPot + 1}`;
+            panel.appendChild(heading);
+
+            if (plantId && plantCatalog[plantId]) {
+                const plant = plantCatalog[plantId];
+                const imageFrame = document.createElement('div');
+                imageFrame.className = 'garden-detail-image-frame';
+                const image = document.createElement('img');
+                image.src = plant.image;
+                image.alt = plant.imageAlt;
+                imageFrame.appendChild(image);
+                const name = document.createElement('strong');
+                name.textContent = plant.name;
+                panel.append(imageFrame, name);
+
+                if (plantId === 'baby-sprat' || plantId === 'mature-sprat') {
+                    const upgradeButton = document.createElement('button');
+                    upgradeButton.type = 'button';
+                    upgradeButton.className = 'cta-btn';
+                    upgradeButton.textContent = plantId === 'baby-sprat'
+                        ? 'Grow to Mature Sprat (3 energy)'
+                        : 'Upgrade to Mother Sprat (42 energy, 2 seeds)';
+                    upgradeButton.addEventListener('click', upgradeGardenPlant);
+                    panel.appendChild(upgradeButton);
+                } else if (plantId === 'mother-sprat') {
+                    const upgradeButton = document.createElement('button');
+                    upgradeButton.type = 'button';
+                    upgradeButton.className = 'cta-btn';
+                    upgradeButton.textContent = 'Choose Elder Sprat (210 energy, 20 seeds)';
+                    upgradeButton.addEventListener('click', renderElderChoices);
+                    panel.appendChild(upgradeButton);
+                    if (selectedElderType) {
+                        renderElderChoices();
+                    }
+                }
+
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.className = 'cta-btn';
+                deleteButton.textContent = 'Delete plant';
+                deleteButton.addEventListener('click', deleteGardenPlant);
+                panel.appendChild(deleteButton);
+                return;
+            }
+
+            const emptyMessage = document.createElement('p');
+            emptyMessage.textContent = 'This pot is empty.';
+            panel.appendChild(emptyMessage);
+            const plantSeedsButton = document.createElement('button');
+            plantSeedsButton.type = 'button';
+            plantSeedsButton.className = 'cta-btn';
+            plantSeedsButton.textContent = 'Plant seeds';
+            plantSeedsButton.addEventListener('click', () => {
+                seedMenuOpen = !seedMenuOpen;
+                renderGardenDetails(save);
+            });
+            panel.appendChild(plantSeedsButton);
+
+            if (!seedMenuOpen) {
+                return;
+            }
+
+            const seedOption = document.createElement('div');
+            seedOption.className = 'seed-option';
+            const seedLabel = document.createElement('span');
+            seedLabel.textContent = `Sprat seeds: ${save.seeds.sprat}`;
+            seedOption.appendChild(seedLabel);
+            panel.appendChild(seedOption);
+            const plantSeedButton = document.createElement('button');
+            plantSeedButton.type = 'button';
+            plantSeedButton.className = 'cta-btn';
+            plantSeedButton.textContent = 'Plant Sprat seed (1 energy)';
+            plantSeedButton.disabled = save.seeds.sprat < 1 || save.energy < 1;
+            plantSeedButton.addEventListener('click', plantSpratSeed);
+            panel.appendChild(plantSeedButton);
+            if (save.seeds.sprat < 1 || save.energy < 1) {
+                const requirement = document.createElement('p');
+                requirement.textContent = save.seeds.sprat < 1
+                    ? 'You do not have any Sprat seeds.'
+                    : 'You need 1 energy to plant a Sprat seed.';
+                panel.appendChild(requirement);
+            }
+        }
+
+        function renderElderChoices() {
+            const panel = document.getElementById('garden-details');
+            const save = normalizeSave(getSaveSlots()[activeSaveSlot], activeSaveSlot);
+            selectedElderType = null;
+            panel.querySelector('.elder-choice-list')?.remove();
+            panel.querySelector('.elder-upgrade-confirm')?.remove();
+            panel.querySelector('.elder-choice-status')?.remove();
+
+            const choices = document.createElement('div');
+            choices.className = 'elder-choice-list';
+            elderChoices.forEach(choice => {
+                const label = document.createElement('label');
+                label.className = 'elder-choice';
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'elder-sprat-type';
+                input.value = choice.id;
+                input.addEventListener('change', () => {
+                    selectedElderType = choice.id;
+                    choices.querySelectorAll('.elder-choice').forEach(option => {
+                        option.classList.toggle('selected', option.querySelector('input').checked);
+                    });
+                    const confirmButton = panel.querySelector('.elder-upgrade-confirm');
+                    confirmButton.disabled = !selectedElderType || save.energy < elderUpgradeCost.energy || save.seeds.sprat < elderUpgradeCost.seeds;
+                });
+                const copy = document.createElement('span');
+                copy.textContent = `${choice.title}: ${choice.description}`;
+                label.append(input, copy);
+                choices.appendChild(label);
+            });
+            const confirmButton = document.createElement('button');
+            confirmButton.type = 'button';
+            confirmButton.className = 'cta-btn elder-upgrade-confirm';
+            confirmButton.textContent = 'Upgrade to selected Elder Sprat';
+            confirmButton.disabled = true;
+            confirmButton.addEventListener('click', upgradeToElderSprat);
+            choices.appendChild(confirmButton);
+
+            const choiceStatus = document.createElement('p');
+            choiceStatus.className = 'elder-choice-status';
+            choiceStatus.textContent = `Available: ${save.energy} energy and ${save.seeds.sprat} Sprat seeds.`;
+            choices.appendChild(choiceStatus);
+            panel.appendChild(choices);
+        }
+
+        function deleteGardenPlant() {
+            const saves = getSaveSlots();
+            const save = normalizeSave(saves[activeSaveSlot], activeSaveSlot);
+            if (selectedGardenPot === null || !save.gardenPots[selectedGardenPot]) {
+                return;
+            }
+            save.gardenPots[selectedGardenPot] = null;
+            if (selectedGardenPot === 0) {
+                save.plant = null;
+            }
+            save.updatedAt = new Date().toISOString();
+            saves[activeSaveSlot] = save;
+            writeSaveSlots(saves);
+            document.getElementById('garden-status').textContent = 'Plant deleted from pot. It remains in your inventory.';
+            showGardenKeepingSelection();
+        }
+
+        function plantSpratSeed() {
+            const saves = getSaveSlots();
+            const save = normalizeSave(saves[activeSaveSlot], activeSaveSlot);
+            const status = document.getElementById('garden-status');
+            if (selectedGardenPot === null || save.gardenPots[selectedGardenPot]) {
+                return;
+            }
+            if (save.seeds.sprat < 1) {
+                status.textContent = 'You do not have any Sprat seeds.';
+                return;
+            }
+            if (save.energy < 1) {
+                status.textContent = 'You need 1 energy to plant a Sprat seed.';
+                return;
+            }
+
+            save.seeds.sprat -= 1;
+            save.energy -= 1;
+            save.gardenPots[selectedGardenPot] = 'baby-sprat';
+            save.updatedAt = new Date().toISOString();
+            saves[activeSaveSlot] = save;
+            writeSaveSlots(saves);
+            updateGameScreen(save);
+            showGardenKeepingSelection();
+            status.textContent = 'Baby Sprat planted in the pot.';
+        }
+
+        function showGardenKeepingSelection() {
+            const selectedPot = selectedGardenPot;
+            showGarden();
+            selectedGardenPot = selectedPot;
+            seedMenuOpen = false;
+            document.querySelectorAll('.garden-pot').forEach((pot, index) => {
+                pot.classList.toggle('selected', index === selectedPot);
+            });
+            const saves = getSaveSlots();
+            renderGardenDetails(normalizeSave(saves[activeSaveSlot], activeSaveSlot));
+        }
+
+        function upgradeGardenPlant() {
+            const saves = getSaveSlots();
+            const save = normalizeSave(saves[activeSaveSlot], activeSaveSlot);
+            const status = document.getElementById('garden-status');
+            if (selectedGardenPot === null) {
+                return;
+            }
+            const currentPlant = save.gardenPots[selectedGardenPot];
+            const upgrades = {
+                'baby-sprat': { next: 'mature-sprat', energy: 3, seeds: 0 },
+                'mature-sprat': { next: 'mother-sprat', energy: 42, seeds: 2 }
+            };
+            const upgrade = upgrades[currentPlant];
+            if (!upgrade) {
+                return;
+            }
+            if (save.energy < upgrade.energy || save.seeds.sprat < upgrade.seeds) {
+                status.textContent = `You need ${upgrade.energy} energy${upgrade.seeds ? ` and ${upgrade.seeds} Sprat seeds` : ''} to upgrade this plant.`;
+                return;
+            }
+
+            save.energy -= upgrade.energy;
+            save.seeds.sprat -= upgrade.seeds;
+            save.gardenPots[selectedGardenPot] = upgrade.next;
+            const upgradedPlantName = plantCatalog[upgrade.next].name;
+            if (selectedGardenPot === 0) {
+                save.plant = upgradedPlantName;
+            }
+            if (!save.inventory.includes(upgrade.next)) {
+                save.inventory.push(upgrade.next);
+            }
+            save.updatedAt = new Date().toISOString();
+            saves[activeSaveSlot] = save;
+            writeSaveSlots(saves);
+            updateGameScreen(save);
+            showGardenKeepingSelection();
+            status.textContent = `${upgradedPlantName} grown!`;
+        }
+
+        function upgradeToElderSprat() {
+            const saves = getSaveSlots();
+            const save = normalizeSave(saves[activeSaveSlot], activeSaveSlot);
+            const status = document.getElementById('garden-status');
+            if (selectedGardenPot === null || save.gardenPots[selectedGardenPot] !== 'mother-sprat') {
+                return;
+            }
+            if (!elderChoices.some(choice => choice.id === selectedElderType)) {
+                status.textContent = 'Choose an Elder Sprat type before upgrading.';
+                return;
+            }
+            if (save.energy < elderUpgradeCost.energy || save.seeds.sprat < elderUpgradeCost.seeds) {
+                status.textContent = 'You need 210 energy and 20 Sprat seeds to upgrade to an Elder Sprat.';
+                return;
+            }
+
+            save.energy -= elderUpgradeCost.energy;
+            save.seeds.sprat -= elderUpgradeCost.seeds;
+            save.gardenPots[selectedGardenPot] = selectedElderType;
+            const elderName = plantCatalog[selectedElderType].name;
+            if (selectedGardenPot === 0) {
+                save.plant = elderName;
+            }
+            if (!save.inventory.includes(selectedElderType)) {
+                save.inventory.push(selectedElderType);
+            }
+            save.updatedAt = new Date().toISOString();
+            saves[activeSaveSlot] = save;
+            writeSaveSlots(saves);
+            updateGameScreen(save);
+            showGardenKeepingSelection();
+            status.textContent = `${elderName} grown!`;
+        }
+
+        function showUpgrades() {
+            showScreen('upgrades-screen');
+        }
+
+        function startEncounter() {
+            const saves = getSaveSlots();
+            const save = saves[activeSaveSlot];
+            if (!save) {
+                openGameMenu();
+                document.getElementById('save-status').textContent = 'Choose or create a save slot before playing.';
+                return;
+            }
+
+            normalizeSave(save, activeSaveSlot);
+            encounterPlantId = save.equippedPlant;
+
+            stopEncounter();
+            save.lastEncounterOutcome = 'in-progress';
+            saves[activeSaveSlot] = save;
+            writeSaveSlots(saves);
+            document.getElementById('encounter-title').textContent = 'First Encounter';
+            document.getElementById('encounter-plant-name').textContent = plantCatalog[encounterPlantId].name;
+            document.getElementById('encounter-status').textContent = 'Line up with the red bar!';
+            document.getElementById('catch-progress').style.width = '0%';
+            document.getElementById('hold-button').disabled = false;
+            playerPosition = 0;
+            targetPosition = Math.random() * 94;
+            const targetSpeedMultiplier = getPlantStat(encounterPlantId, 'targetSpeedMultiplier', 1);
+            targetVelocity = (Math.random() < 0.5 ? -1 : 1) * (5 + Math.random() * 7) * targetSpeedMultiplier;
+            isHolding = false;
+            encounterActive = true;
+            encounterWon = false;
+            captureProgressMs = 0;
+            encounterElapsedMs = 0;
+            previousFrameTime = null;
+            renderEncounterBars();
+            showScreen('encounter-screen');
+            scheduleTargetMove();
+            animationFrameId = requestAnimationFrame(updateEncounter);
+        }
+
+        function stopEncounter() {
+            encounterActive = false;
+            isHolding = false;
+            if (animationFrameId !== null) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+            if (targetMoveTimer !== null) {
+                clearTimeout(targetMoveTimer);
+                targetMoveTimer = null;
+            }
+        }
+
+        function renderEncounterBars() {
+            document.getElementById('target-bar').style.left = `${targetPosition}%`;
+            document.getElementById('player-bar').style.left = `${playerPosition}%`;
+            document.getElementById('player-bar').style.width = `${getCatchBarWidth(encounterPlantId)}%`;
+        }
+
+        function scheduleTargetMove() {
+            if (!encounterActive || encounterWon) {
+                return;
+            }
+            targetMoveTimer = setTimeout(() => {
+                const targetSpeedMultiplier = getPlantStat(encounterPlantId, 'targetSpeedMultiplier', 1);
+                targetVelocity = (Math.random() < 0.5 ? -1 : 1) * (5 + Math.random() * 7) * targetSpeedMultiplier;
+                scheduleTargetMove();
+            }, 1200 + Math.random() * 1200);
+        }
+
+        function updateEncounter(timestamp) {
+            if (!encounterActive || encounterWon) {
+                return;
+            }
+
+            const elapsed = previousFrameTime === null ? 0 : (timestamp - previousFrameTime) / 1000;
+            previousFrameTime = timestamp;
+            encounterElapsedMs += elapsed * 1000;
+            if (encounterElapsedMs >= 15000) {
+                failEncounter();
+                return;
+            }
+
+            const catchBarWidth = getCatchBarWidth(encounterPlantId);
+            playerPosition = Math.max(0, Math.min(100 - catchBarWidth, playerPosition + (isHolding ? 34 : -20) * elapsed));
+            targetPosition += targetVelocity * elapsed;
+            if (targetPosition < 0) {
+                targetPosition = 0;
+                targetVelocity = Math.abs(targetVelocity);
+            } else if (targetPosition > 98.8) {
+                targetPosition = 98.8;
+                targetVelocity = -Math.abs(targetVelocity);
+            }
+
+            const overlaps = playerPosition + catchBarWidth >= targetPosition && playerPosition <= targetPosition + 1.2;
+            const status = document.getElementById('encounter-status');
+            const progress = document.getElementById('catch-progress');
+            const captureDuration = getPlantStat(encounterPlantId, 'captureDuration', 3000);
+            if (overlaps) {
+                captureProgressMs = Math.min(captureDuration, captureProgressMs + elapsed * 1000);
+                status.textContent = `Holding the fly... ${(Math.max(0, captureDuration - captureProgressMs) / 1000).toFixed(1)} seconds to catch. ${(Math.max(0, 15000 - encounterElapsedMs) / 1000).toFixed(1)} seconds remain.`;
+                if (captureProgressMs >= captureDuration) {
+                    winEncounter();
+                    return;
+                }
+            } else {
+                captureProgressMs = Math.max(0, captureProgressMs - elapsed * 1000);
+                status.textContent = `Stay on the red bar! Capture progress: ${(captureProgressMs / 1000).toFixed(1)}s. Time left: ${(Math.max(0, 15000 - encounterElapsedMs) / 1000).toFixed(1)}s.`;
+            }
+            progress.style.width = `${captureProgressMs / captureDuration * 100}%`;
+
+            renderEncounterBars();
+            animationFrameId = requestAnimationFrame(updateEncounter);
+        }
+
+        function failEncounter() {
+            encounterActive = false;
+            stopEncounter();
+            const saves = getSaveSlots();
+            const save = normalizeSave(saves[activeSaveSlot], activeSaveSlot);
+            save.lastEncounterOutcome = 'timeout';
+            save.updatedAt = new Date().toISOString();
+            saves[activeSaveSlot] = save;
+            writeSaveSlots(saves);
+            updateGameScreen(save);
+            showScreen('game-screen');
+        }
+
+        function winEncounter() {
+            encounterWon = true;
+            stopEncounter();
+            const saves = getSaveSlots();
+            const save = normalizeSave(saves[activeSaveSlot], activeSaveSlot);
+            const rewardMultiplier = getPlantStat(encounterPlantId, 'rewardMultiplier', 1);
+            const energyReward = 3 * rewardMultiplier;
+            save.energy += energyReward;
+            save.rewardClaimed = true;
+            save.won = true;
+            save.seedMisses += 1;
+            save.lastEncounterSeedDrop = Math.random() < 0.2 || save.seedMisses >= 5;
+            if (save.lastEncounterSeedDrop) {
+                save.seeds.sprat += rewardMultiplier;
+                save.seedMisses = 0;
+            }
+            save.lastEncounterEnergyReward = energyReward;
+            save.lastEncounterOutcome = 'won';
+            save.updatedAt = new Date().toISOString();
+            saves[activeSaveSlot] = save;
+            writeSaveSlots(saves);
+            updateGameScreen(save);
+            showScreen('game-screen');
+        }
+
+        const holdButton = document.getElementById('hold-button');
+        document.getElementById('encounter-screen').addEventListener('pointerdown', event => {
+            if (!encounterActive || encounterWon) {
+                return;
+            }
+            const guiControl = event.target.closest('button, a, input, select, textarea, [role="button"]');
+            if (guiControl && !holdButton.contains(guiControl)) {
+                return;
+            }
+            event.preventDefault();
+            isHolding = true;
+        });
+        window.addEventListener('pointerup', () => { isHolding = false; });
+        window.addEventListener('pointercancel', () => { isHolding = false; });
+        window.addEventListener('keydown', event => {
+            if (event.code !== 'Space' || !encounterActive || encounterWon) {
+                return;
+            }
+            event.preventDefault();
+            isHolding = true;
+        });
+        window.addEventListener('keyup', event => {
+            if (event.code !== 'Space') {
+                return;
+            }
+            if (encounterActive) {
+                event.preventDefault();
+            }
+            isHolding = false;
+        });
+        window.addEventListener('blur', () => { isHolding = false; });
+
+        // Main Screen toggle logic (Home vs Leaderboards)
+        function showScreen(screenId) {
+            if (screenId !== 'encounter-screen' && encounterActive) {
+                stopEncounter();
+            }
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // Leaderboard choice navigation
+        function switchCategory(category) {
+            if (category === 'strongest') {
+                showScreen('strongest-screen');
+            } else if (category === 'biggest') {
+                showScreen('biggest-screen');
+            } else if (category === 'capture-rate') {
+                showScreen('capture-rate-screen');
+            }
+        }
+
+        function switchBiggestCategory(category) {
+            document.getElementById('tab-overall').classList.toggle('active', category === 'overall');
+            document.getElementById('tab-potential').classList.toggle('active', category === 'potential');
+            document.getElementById('overall-list').classList.toggle('active', category === 'overall');
+            document.getElementById('potential-list').classList.toggle('active', category === 'potential');
+        }
+
+        document.querySelectorAll('.flytrap-list').forEach(list => {
+            const cards = Array.from(list.querySelectorAll('.flytrap-card'));
+            cards.sort((cardA, cardB) => {
+                const rankA = Number.parseInt(cardA.querySelector('.card-title').textContent, 10);
+                const rankB = Number.parseInt(cardB.querySelector('.card-title').textContent, 10);
+                return rankB - rankA;
+            });
+            cards.forEach(card => list.appendChild(card));
+        });
+
+        initializeAccountSystem();
+    </script>
+</body>
+</html>
